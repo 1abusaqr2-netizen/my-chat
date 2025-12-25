@@ -3,7 +3,7 @@ import random
 import os
 
 def main(page: ft.Page):
-    page.title = "إنشاء وتصميم - المهندس/ أصيل السبعي"
+    page.title = "إنشاء وتصميم م/أصيل السبعي (أبوصقر) "
     page.rtl = True
     page.theme_mode = ft.ThemeMode.LIGHT
     page.window_width = 450
@@ -17,7 +17,7 @@ def main(page: ft.Page):
     txt_otp = ft.TextField(label="أدخل كود التحقق", prefix_icon=ft.icons.LOCK_CLOCK, visible=False)
     
     chat_list = ft.ListView(expand=True, spacing=10, auto_scroll=True)
-    msg_input = ft.TextField(hint_text="اكتب رسالة...", expand=True, on_submit=lambda e: send_message(e))
+    msg_input = ft.TextField(hint_text="اكتب رسالة...", expand=True)
 
     def on_broadcast(data):
         is_me = data["phone"] == page.session.get("phone")
@@ -77,14 +77,14 @@ def main(page: ft.Page):
 
     def enter_chat_room():
         page.clean()
-        page.appbar = ft.AppBar(
-            title=ft.Text(f"المستخدم: {page.session.get('username')}"), 
-            bgcolor="gold",
-            center_title=True
-        )
-        page.add(
-            ft.Column([
-                ft.Container(content=chat_list, expand=True), 
-                ft.Row([
-                    msg_input, 
-                    ft.IconButton(ft
+        page.appbar = ft.AppBar(title=ft.Text(f"المستخدم: {page.session.get('username')}"), bgcolor="gold")
+        page.add(ft.Column([ft.Container(content=chat_list, expand=True), ft.Row([msg_input, ft.IconButton(ft.icons.SEND, on_click=send_message)])], expand=True))
+
+    btn_login = ft.ElevatedButton("إرسال كود التحقق", on_click=verify_logic, width=250, bgcolor="gold", color="black")
+    
+    page.add(ft.Column([ft.Icon(ft.icons.SECURITY, size=50, color="gold"), txt_name, txt_phone, txt_otp, btn_login], horizontal_alignment=ft.CrossAxisAlignment.CENTER))
+
+# تشغيل التطبيق كويب وتحديد المنفذ تلقائياً للسيرفر
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8502))
+    ft.app(target=main, view=ft.AppView.WEB_BROWSER, port=port)
